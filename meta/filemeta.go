@@ -1,5 +1,7 @@
 package meta
 
+import "netdisk/db"
+
 // FileMeta 文件元信息
 type FileMeta struct {
 	FileSha1 string
@@ -18,6 +20,12 @@ func init() {
 // UpdateFileMeta 更新或新增
 func UpdateFileMeta(fileMeta FileMeta) {
 	fileMetas[fileMeta.FileSha1] = fileMeta
+}
+
+// UpdateFileMetaDB ...
+func UpdateFileMetaDB(fileMeta FileMeta) bool {
+	return db.OnFileUploadFinished(fileMeta.FileSha1,
+		fileMeta.FileName, fileMeta.FileSize, fileMeta.Location)
 }
 
 // GetFileMeta 获取文件元信息

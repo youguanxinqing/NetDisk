@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"netdisk/meta"
 	"netdisk/util"
@@ -49,10 +50,15 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Sprintf("failed store file : %v", err.Error())
 			return
 		}
-		// 读指针移动到文件初始位置
+		// 读指针移动到文件初始位置, 更新 filehash
 		newFile.Seek(0, 0)
 		fileMeta.FileSha1 = util.FileSha1(newFile)
 		meta.UpdateFileMeta(fileMeta)
+
+		ok := meta.UpdateFileMetaDB(fileMeta)
+		if !ok {
+			log.Println("Failed to save to database")
+		}
 
 		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
 	}

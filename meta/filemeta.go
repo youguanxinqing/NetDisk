@@ -21,8 +21,11 @@ func UpdateFileMeta(fileMeta FileMeta) {
 }
 
 // GetFileMeta 获取文件元信息
-func GetFileMeta(fileSha1 string) FileMeta {
-	return fileMetas[fileSha1]
+func GetFileMeta(fileSha1 string) (FileMeta, bool) {
+	if data, ok := fileMetas[fileSha1]; ok {
+		return data, true
+	}
+	return FileMeta{}, false
 }
 
 // GetLastFileMetas 获取批量文件元信息
@@ -34,7 +37,7 @@ func GetLastFileMetas(count int) []FileMeta {
 	return fileMetaArr[:count]
 }
 
-// RemoveFileMeta ...
+// RemoveFileMeta 移除文件元信息
 func RemoveFileMeta(fileSha1 string) {
 	delete(fileMetas, fileSha1)
 }

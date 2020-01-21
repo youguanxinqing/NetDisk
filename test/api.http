@@ -1,2 +1,31 @@
+# 上传页面
+GET http://127.0.0.1:8080/file/upload
 
-GET http://127.0.0.1:8080/file/meta?filehash=338e360131747b13ac176d806f37f120e2a6029c
+###
+# 上传文件
+POST http://127.0.0.1:8080/file/upload
+Content-Type: "multipart/form-data"
+
+< ./nohup.out
+
+### 
+# 查询
+GET http://127.0.0.1:8080/file/meta?
+  &filehash=aa7a1d3347b66f85af35585907f424305b87f3a3
+
+###
+# 下载
+GET http://127.0.0.1:8080/file/download?
+  &filehash=aa7a1d3347b66f85af35585907f424305b87f3a3
+
+###
+# 重命名
+GET http://127.0.0.1:8080/file/update?
+  &op=0
+  &filehash=aa7a1d3347b66f85af35585907f424305b87f3a3
+  &filename=newname
+
+###
+# 删除文件
+GET http://127.0.0.1:8080/file/delete?
+  &filehash=aa7a1d3347b66f85af35585907f424305b87f3a3

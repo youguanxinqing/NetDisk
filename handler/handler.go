@@ -68,7 +68,11 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 	// 提取 url params
 	r.ParseForm()
 	filehash := r.Form["filehash"][0]
-	fileMeta := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMeta(filehash)
+	if !ok {
+		io.WriteString(w, "incorrect filehash")
+		return
+	}
 	// struct -> json
 	data, err := json.Marshal(fileMeta)
 	if err != nil {
@@ -83,7 +87,11 @@ func FileDownloadHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	filehash := r.Form["filehash"][0]
-	fileMeta := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMeta(filehash)
+	if !ok {
+		io.WriteString(w, "incorrect filehash")
+		return
+	}
 
 	fd, err := os.Open(fileMeta.Location)
 	if err != nil {
@@ -111,16 +119,21 @@ func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	newFileName := r.Form.Get("filename")
 
 	if opType != "0" {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotImplemented)
 		return
 	}
 
 	if r.Method == "POST" {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Header().Set("Allow", "GET")
 		return
 	}
 	// 更新 file meta
-	fileMeta := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMeta(filehash)
+	if !ok {
+		io.WriteString(w, "incorrect filehash")
+		return
+	}
 	fileMeta.FileName = newFileName
 	meta.UpdateFileMeta(fileMeta)
 	// struct -> json
@@ -138,7 +151,11 @@ func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	filehash := r.Form.Get("filehash")
 	// ...
-	fileMeta := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMeta(filehash)
+	if !ok {
+		io.WriteString(w, "incorrect filehash")
+		return
+	}
 	// 删除文件
 	os.Remove(fileMeta.Location)
 	// 清除文件元信息

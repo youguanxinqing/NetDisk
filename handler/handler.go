@@ -50,8 +50,9 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Sprintf("failed store file : %v", err.Error())
 			return
 		}
-		// 读指针移动到文件初始位置, 更新 filehash
+		// 读指针移动到文件初始位置
 		newFile.Seek(0, 0)
+		// 更新 filehash
 		fileMeta.FileSha1 = util.FileSha1(newFile)
 		meta.UpdateFileMeta(fileMeta)
 
@@ -74,7 +75,7 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 	// 提取 url params
 	r.ParseForm()
 	filehash := r.Form["filehash"][0]
-	fileMeta, ok := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMetaDB(filehash)
 	if !ok {
 		io.WriteString(w, "incorrect filehash")
 		return
@@ -157,7 +158,7 @@ func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	filehash := r.Form.Get("filehash")
 	// ...
-	fileMeta, ok := meta.GetFileMeta(filehash)
+	fileMeta, ok := meta.GetFileMetaDB(filehash)
 	if !ok {
 		io.WriteString(w, "incorrect filehash")
 		return
@@ -165,7 +166,7 @@ func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	// 删除文件
 	os.Remove(fileMeta.Location)
 	// 清除文件元信息
-	meta.RemoveFileMeta(filehash)
+	meta.RemoveFileMetaDB(filehash)
 
 	w.WriteHeader(http.StatusOK)
 }

@@ -1,14 +1,17 @@
 package meta
 
-import "netdisk/db"
+import (
+	"log"
+	"netdisk/db"
+)
 
 // FileMeta 文件元信息
 type FileMeta struct {
-	FileSha1 string
-	FileName string
-	FileSize int64
-	Location string
-	UploadAt string
+	FileSha1 string `json:"filehash"`
+	FileName string `json:"filename"`
+	FileSize int64  `json:"filesize"`
+	Location string `json:"location"`
+	UploadAt string `json:"update_at"`
 }
 
 var fileMetas map[string]FileMeta
@@ -36,6 +39,24 @@ func GetFileMeta(fileSha1 string) (FileMeta, bool) {
 	return FileMeta{}, false
 }
 
+// GetFileMetaDB 数据库查询
+func GetFileMetaDB(fileSha1 string) (FileMeta, bool) {
+	fileMeta, err := db.GetFileMeta(fileSha1)
+	if err != nil {
+		log.Println(err.Error())
+		return FileMeta{}, false
+	}
+
+	return FileMeta{
+		FileSha1: fileMeta.FileHash,
+		FileName: fileMeta.FileName.String,
+		FileSize: fileMeta.FileSize.Int64,
+		Location: fileMeta.FileAddr.String,
+		UploadAt: fileMeta.UpdateAt.Local().String(),
+	}, true
+
+}
+
 // GetLastFileMetas 获取批量文件元信息
 func GetLastFileMetas(count int) []FileMeta {
 	fileMetaArr := make([]FileMeta, len(fileMetas))
@@ -48,4 +69,12 @@ func GetLastFileMetas(count int) []FileMeta {
 // RemoveFileMeta 移除文件元信息
 func RemoveFileMeta(fileSha1 string) {
 	delete(fileMetas, fileSha1)
+}
+
+// RemoveFileMetaDB 移除文件元信息(from db)
+func RemoveFileMetaDB(fileSha1 string) {
+	err := db.DeleteFileMeta(fileSha1)
+	if err != nil {
+		log.Println("occur error while delete filemeta, err: " + err.Error())
+	}
 }

@@ -22,6 +22,7 @@ func main() {
 
 	{ // user
 		http.HandleFunc("/user/signup", handler.SignUpHandler)
+		http.HandleFunc("/user/signin", handler.SignInHandler)
 	}
 
 	// listen

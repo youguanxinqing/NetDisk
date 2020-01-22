@@ -4,7 +4,7 @@ import "netdisk/db/mysql"
 
 import "log"
 
-// UserSignUp ...
+// UserSignUp 注册接口
 func UserSignUp(username, passwd string) bool {
 	stmt, err := mysql.DBConn().Prepare(
 		"insert ignore tbl_user(`user_name`, `user_pwd`) values(?,?)",
@@ -29,4 +29,9 @@ func UserSignUp(username, passwd string) bool {
 		log.Println("user existed")
 	}
 	return false
+}
+
+// UserSignIn 登陆接口
+func UserSignIn() {
+
 }

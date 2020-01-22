@@ -13,7 +13,7 @@ const (
 	pwdSalt = "*#890"
 )
 
-// SignUpHandler ...
+// SignUpHandler 用户注册
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		if html, err := ioutil.ReadFile("./static/view/signup.html"); err == nil {
@@ -36,5 +36,10 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+
+}
+
+// SignInHandler 用户登陆
+func SignInHandler(w http.ResponseWriter, r *http.Request) {
 
 }

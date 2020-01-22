@@ -9,12 +9,20 @@ import (
 
 func main() {
 	// routes
-	http.HandleFunc("/file/upload", handler.UploadHandler)
-	http.HandleFunc("/file/upload/suc", handler.UploadSucHandler)
-	http.HandleFunc("/file/meta", handler.GetFileMetaHandler)
-	http.HandleFunc("/file/download", handler.FileDownloadHandler)
-	http.HandleFunc("/file/update", handler.FileMetaUpdateHandler)
-	http.HandleFunc("/file/delete", handler.FileDeleteHandler)
+	http.HandleFunc("/static/", handler.StaticResource)
+
+	{ // core
+		http.HandleFunc("/file/upload", handler.UploadHandler)
+		http.HandleFunc("/file/upload/suc", handler.UploadSucHandler)
+		http.HandleFunc("/file/meta", handler.GetFileMetaHandler)
+		http.HandleFunc("/file/download", handler.FileDownloadHandler)
+		http.HandleFunc("/file/update", handler.FileMetaUpdateHandler)
+		http.HandleFunc("/file/delete", handler.FileDeleteHandler)
+	}
+
+	{ // user
+		http.HandleFunc("/user/signup", handler.SignUpHandler)
+	}
 
 	// listen
 	addr := ":8080"

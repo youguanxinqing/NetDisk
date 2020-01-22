@@ -94,3 +94,8 @@ func DeleteFileMeta(filehash string) error {
 	}
 	return nil
 }
+
+// UpdateFileNameDB ...
+func UpdateFileNameDB() {
+
+}

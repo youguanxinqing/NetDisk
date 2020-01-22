@@ -54,7 +54,6 @@ func GetFileMetaDB(fileSha1 string) (FileMeta, bool) {
 		Location: fileMeta.FileAddr.String,
 		UploadAt: fileMeta.UpdateAt.Local().String(),
 	}, true
-
 }
 
 // GetLastFileMetas 获取批量文件元信息

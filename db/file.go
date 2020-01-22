@@ -50,7 +50,6 @@ type TableFile struct {
 
 // GetFileMeta 查询文件元信息
 func GetFileMeta(filehash string) (*TableFile, error) {
-	fmt.Println(filehash)
 	stmt, err := mydb.DBConn().Prepare(
 		"select file_sha1, file_name, file_size, file_addr, update_at " +
 			"from tbl_file " +
@@ -65,7 +64,7 @@ func GetFileMeta(filehash string) (*TableFile, error) {
 	err = stmt.QueryRow(filehash).Scan(
 		&tf.FileHash, &tf.FileName, &tf.FileSize, &tf.FileAddr, &tf.UpdateAt)
 	if err != nil {
-		log.Println(err.Error())
+		return &tf, err
 	}
 	return &tf, nil
 }

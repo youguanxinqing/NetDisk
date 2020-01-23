@@ -32,6 +32,23 @@ func UserSignUp(username, passwd string) bool {
 }
 
 // UserSignIn 登陆接口
-func UserSignIn() {
+func UserSignIn(username, encpasswd string) bool {
+	stmt, err := mysql.DBConn().Prepare(
+		"select * from tbl_user where username=? limit 1",
+	)
+	if err != nil {
+		log.Println(err.Error())
+		return false
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(username)
+	if err != nil {
+		log.Println(err.Error())
+		return false
+	} else if rows == nil {
+		log.Println("username not found: " + username)
+		return false
+	}
 
 }

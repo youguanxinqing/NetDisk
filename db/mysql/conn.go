@@ -24,3 +24,37 @@ func init() {
 func DBConn() *sql.DB {
 	return db
 }
+
+// ParseRows 数据 -> 数据行
+func ParseRows(rows *sql.Rows) []map[string]interface{} {
+	columns, _ := rows.Columns()
+	scanArgs := make([]interface{}, len(columns))
+	values := make([]interface{}, len(columns))
+	//  构建二维数组
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	record := make(map[string]interface{})
+	records := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		err := rows.Scan(scanArgs...)
+		CheckErr(err)
+
+		for i, col := range values {
+			if col != nil {
+				record[columns[i]] = col
+			}
+		}
+		records = append(records, record)
+	}
+	return records
+}
+
+// CheckErr 异常检查
+func CheckErr(err error) {
+	if err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
+}

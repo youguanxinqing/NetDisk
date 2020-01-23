@@ -27,10 +27,11 @@ func DBConn() *sql.DB {
 
 // ParseRows 数据 -> 数据行
 func ParseRows(rows *sql.Rows) []map[string]interface{} {
+	// 获取所有列名
 	columns, _ := rows.Columns()
 	scanArgs := make([]interface{}, len(columns))
 	values := make([]interface{}, len(columns))
-	//  构建二维数组
+	// scanArgs 指针列表; values 值列表
 	for i := range values {
 		scanArgs[i] = &values[i]
 	}

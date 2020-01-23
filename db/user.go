@@ -34,7 +34,7 @@ func UserSignUp(username, passwd string) bool {
 // UserSignIn 登陆接口
 func UserSignIn(username, encpasswd string) bool {
 	stmt, err := mysql.DBConn().Prepare(
-		"select * from tbl_user where username=? limit 1",
+		"select * from tbl_user where user_name=? limit 1",
 	)
 	if err != nil {
 		log.Println(err.Error())
@@ -51,4 +51,12 @@ func UserSignIn(username, encpasswd string) bool {
 		return false
 	}
 
+	ret := mysql.ParseRows(rows)[0]
+	if pwd, ok := ret["user_pwd"]; ok {
+		if pwdInt8, ok := pwd.([]uint8); ok && string(pwdInt8) == encpasswd {
+			return true
+		}
+	}
+	log.Println("password is error")
+	return false
 }

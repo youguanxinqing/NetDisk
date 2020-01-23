@@ -1,8 +1,9 @@
 package db
 
-import "netdisk/db/mysql"
-
-import "log"
+import (
+	"log"
+	"netdisk/db/mysql"
+)
 
 // UserSignUp 注册接口
 func UserSignUp(username, passwd string) bool {
@@ -58,5 +59,30 @@ func UserSignIn(username, encpasswd string) bool {
 		}
 	}
 	log.Println("password is error")
+	return false
+}
+
+// UpdateToken 更新 token
+func UpdateToken(username, token string) bool {
+	stmt, err := mysql.DBConn().Prepare(
+		"replace into tbl_user_token(`user_name`, `user_token`) values(?,?)",
+	)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	defer stmt.Close()
+
+	if ret, err := stmt.Exec(username, token); err == nil {
+		if num, err := ret.RowsAffected(); err == nil && num > 0 {
+			return true
+		} else if err != nil {
+			log.Println(err)
+		} else {
+			log.Printf("UpdateToken does not take effect; num: %d", num)
+		}
+	} else {
+		log.Println(err)
+	}
 	return false
 }

@@ -20,3 +20,9 @@ func StaticResource(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write(data)
 }
+
+// HomeHandler 首页
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	html, _ := ioutil.ReadFile("./static/view/home.html")
+	w.Write(html)
+}

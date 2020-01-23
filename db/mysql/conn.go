@@ -25,7 +25,7 @@ func DBConn() *sql.DB {
 	return db
 }
 
-// ParseRows 数据 -> 数据行
+// ParseRows 序列化数据
 func ParseRows(rows *sql.Rows) []map[string]interface{} {
 	// 获取所有列名
 	columns, _ := rows.Columns()

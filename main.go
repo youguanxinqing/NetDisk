@@ -9,7 +9,10 @@ import (
 
 func main() {
 	// routes
-	http.HandleFunc("/static/", handler.StaticResource)
+	{ // base
+		http.HandleFunc("/static/", handler.StaticResource)
+		http.HandleFunc("/home", handler.HomeHandler)
+	}
 
 	{ // core
 		http.HandleFunc("/file/upload", handler.UploadHandler)

@@ -5,11 +5,11 @@ import (
 	"reflect"
 )
 
-// StructToJSON struct -> json
-func StructToJSON(structure interface{}) string {
+// JSON struct/map -> json
+func JSON(structure interface{}) string {
 	var data []byte
 	dataType := reflect.TypeOf(structure).Kind()
-	if dataType == reflect.Struct {
+	if dataType == reflect.Struct || dataType == reflect.Map {
 		data, _ = json.Marshal(structure)
 	} else {
 		data, _ = json.Marshal(map[string]string{})

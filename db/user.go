@@ -62,6 +62,23 @@ func UserSignIn(username, encpasswd string) bool {
 	return false
 }
 
+// GetToken ...
+func GetToken(username string) (string, error) {
+	var token string
+	stmt, err := mysql.DBConn().Prepare(
+		"select `user_token` from tbl_user_token where `user_name`=?",
+	)
+	if err != nil {
+		return token, err
+	}
+	defer stmt.Close()
+
+	if err := stmt.QueryRow(username).Scan(&token); err != nil {
+		return token, err
+	}
+	return token, nil
+}
+
 // UpdateToken 更新 token
 func UpdateToken(username, token string) bool {
 	stmt, err := mysql.DBConn().Prepare(
@@ -85,4 +102,35 @@ func UpdateToken(username, token string) bool {
 		log.Println(err)
 	}
 	return false
+}
+
+// User ...
+type User struct {
+	Username     string
+	Email        string
+	Phone        string
+	SignupAt     string
+	LastActiveAt string
+	Status       int
+}
+
+// GetUserInfo ...
+func GetUserInfo(username string) (User, error) {
+	user := User{}
+	stmt, err := mysql.DBConn().Prepare(
+		"select user_name, signup_at " +
+			"from tbl_user " +
+			"where user_name=? limit 1",
+	)
+	if err != nil {
+		return user, err
+	}
+	defer stmt.Close()
+
+	if err := stmt.QueryRow(username).Scan(
+		&user.Username, &user.SignupAt,
+	); err != nil {
+		return user, err
+	}
+	return user, nil
 }

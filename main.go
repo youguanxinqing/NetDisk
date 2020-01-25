@@ -26,7 +26,7 @@ func main() {
 	{ // user
 		http.HandleFunc("/user/signup", handler.SignUpHandler)
 		http.HandleFunc("/user/signin", handler.SignInHandler)
-		http.HandleFunc("/user/info", handler.UserInfoHandler)
+		http.HandleFunc("/user/info", handler.HTTPInterceptor(handler.UserInfoHandler))
 	}
 
 	// listen

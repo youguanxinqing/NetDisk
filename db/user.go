@@ -2,12 +2,12 @@ package db
 
 import (
 	"log"
-	"netdisk/db/mysql"
+	mydb "netdisk/db/mysql"
 )
 
 // UserSignUp 注册接口
 func UserSignUp(username, passwd string) bool {
-	stmt, err := mysql.DBConn().Prepare(
+	stmt, err := mydb.DBConn().Prepare(
 		"insert ignore tbl_user(`user_name`, `user_pwd`) values(?,?)",
 	)
 	if err != nil {
@@ -34,7 +34,7 @@ func UserSignUp(username, passwd string) bool {
 
 // UserSignIn 登陆接口
 func UserSignIn(username, encpasswd string) bool {
-	stmt, err := mysql.DBConn().Prepare(
+	stmt, err := mydb.DBConn().Prepare(
 		"select * from tbl_user where user_name=? limit 1",
 	)
 	if err != nil {
@@ -52,7 +52,7 @@ func UserSignIn(username, encpasswd string) bool {
 		return false
 	}
 
-	ret := mysql.ParseRows(rows)[0]
+	ret := mydb.ParseRows(rows)[0]
 	if pwd, ok := ret["user_pwd"]; ok {
 		if pwdInt8, ok := pwd.([]uint8); ok && string(pwdInt8) == encpasswd {
 			return true
@@ -65,7 +65,7 @@ func UserSignIn(username, encpasswd string) bool {
 // GetToken ...
 func GetToken(username string) (string, error) {
 	var token string
-	stmt, err := mysql.DBConn().Prepare(
+	stmt, err := mydb.DBConn().Prepare(
 		"select `user_token` from tbl_user_token where `user_name`=?",
 	)
 	if err != nil {
@@ -81,7 +81,7 @@ func GetToken(username string) (string, error) {
 
 // UpdateToken 更新 token
 func UpdateToken(username, token string) bool {
-	stmt, err := mysql.DBConn().Prepare(
+	stmt, err := mydb.DBConn().Prepare(
 		"replace into tbl_user_token(`user_name`, `user_token`) values(?,?)",
 	)
 	if err != nil {
@@ -117,7 +117,7 @@ type User struct {
 // GetUserInfo ...
 func GetUserInfo(username string) (User, error) {
 	user := User{}
-	stmt, err := mysql.DBConn().Prepare(
+	stmt, err := mydb.DBConn().Prepare(
 		"select user_name, signup_at " +
 			"from tbl_user " +
 			"where user_name=? limit 1",

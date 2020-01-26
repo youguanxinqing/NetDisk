@@ -65,7 +65,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		// 2. 生成 token
 		token := genToken(username)
 		if ok := db.UpdateToken(username, token); !ok {
-			io.WriteString(w, "Failed to updsate token")
+			io.WriteString(w, "Failed to update token")
 			return
 		}
 		// 3. 登陆成功后重定向到首页
@@ -105,7 +105,7 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// 4. 组装并响应用户数据
 		response := util.RespMsg{
-			Code: 0,
+			Code: http.StatusOK,
 			Msg:  "OK",
 			Data: userInfo,
 		}

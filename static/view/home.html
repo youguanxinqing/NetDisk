@@ -79,6 +79,13 @@
       },
       success: function (body, textStatus, jqXHR) {
         var resp = JSON.parse(body);
+        
+        // token 过期跳转
+        if (resp.code && resp.code === 301) {
+          window.location.href = resp.data.Location;
+          return
+        }
+        // token 正常
         document.getElementById("username").innerHTML = resp.data.Username;
         document.getElementById("regtime").innerHTML = resp.data.SignupAt;
         updateFileList();

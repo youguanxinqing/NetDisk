@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -27,7 +26,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		file, head, err := r.FormFile("file")
 		if err != nil {
-			fmt.Sprintf("failed get data : %v", err.Error())
+			log.Printf("failed get data : %v", err.Error())
 			return
 		}
 		defer file.Close()
@@ -40,14 +39,14 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		// 创建文件
 		newFile, err := os.Create(fileMeta.Location)
 		if err != nil {
-			fmt.Sprintf("failed create new file : %v", err.Error())
+			log.Printf("failed create new file : %v", err.Error())
 			return
 		}
 		defer newFile.Close()
 		// 写入文件
 		fileMeta.FileSize, err = io.Copy(newFile, file)
 		if err != nil {
-			fmt.Sprintf("failed store file : %v", err.Error())
+			log.Printf("failed store file : %v", err.Error())
 			return
 		}
 		// 读指针移动到文件初始位置

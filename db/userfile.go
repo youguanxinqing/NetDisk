@@ -51,7 +51,7 @@ func QueryUserFileMetas(username string, limit int) ([]UserFile, error) {
 	fileMetas := []UserFile{}
 
 	stmt, err := mysql.DBConn().Prepare(
-		"select `user_name`, `file_sha1`, `file_size`, `file_name`, `last_update` " +
+		"select `user_name`, `file_sha1`, `file_size`, `file_name`, `last_update`, `upload_at` " +
 			"from tbl_user_file " +
 			"where user_name=?",
 	)
@@ -64,7 +64,8 @@ func QueryUserFileMetas(username string, limit int) ([]UserFile, error) {
 		for rows.Next() {
 			var uf UserFile
 			err := rows.Scan(
-				&uf.UserName, &uf.FileHash, &uf.FileSize, &uf.FileName, &uf.LastUpdate,
+				&uf.UserName, &uf.FileHash, &uf.FileSize, &uf.FileName,
+				&uf.LastUpdate, &uf.UploadAt,
 			)
 			if err != nil {
 				log.Println(err.Error())

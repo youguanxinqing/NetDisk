@@ -10,6 +10,7 @@ import (
 	"netdisk/settings"
 	"netdisk/util"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -177,4 +178,17 @@ func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	meta.RemoveFileMetaDB(filehash)
 
 	w.WriteHeader(http.StatusOK)
+}
+
+// QueryUserFileMetasHandler 查询文件详情接口
+func QueryUserFileMetasHandler(w http.ResponseWriter, r *http.Request) {
+	username := r.Form.Get("username")
+	limitStr := r.Form.Get("limit")
+	limit := 10
+	if n, err := strconv.Atoi(limitStr); err == nil {
+		limit = n
+	}
+	ufiles := meta.QueryUserFileDetails(username, limit)
+	response := util.NewRespMsg(http.StatusOK, "OK", ufiles)
+	w.Write(response.JSONBytes())
 }

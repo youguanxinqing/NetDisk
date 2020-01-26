@@ -22,6 +22,7 @@ func main() {
 		http.HandleFunc("/file/download", handler.FileDownloadHandler)
 		http.HandleFunc("/file/update", handler.FileMetaUpdateHandler)
 		http.HandleFunc("/file/delete", handler.FileDeleteHandler)
+		http.HandleFunc("/file/query", handler.HTTPInterceptor(handler.QueryUserFileMetasHandler))
 	}
 
 	{ // user

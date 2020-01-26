@@ -13,6 +13,6 @@ func ResponseJSON(data interface{}) string {
 		return string(dataBytes)
 	} else {
 		log.Println(err.Error())
-		return "{}"
 	}
+	return "{}"
 }

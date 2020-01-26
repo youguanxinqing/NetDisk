@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"netdisk/meta"
+	"netdisk/settings"
 	"netdisk/util"
 	"os"
 	"time"
@@ -33,7 +34,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 		fileMeta := meta.FileMeta{
 			FileName: head.Filename,
-			Location: "/tmp/" + head.Filename,
+			Location: settings.Global.StoreDir + head.Filename,
 			UploadAt: time.Now().Format("2018-01-02 12:20"),
 		}
 		// 创建文件
@@ -54,13 +55,21 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		// 更新 filehash
 		fileMeta.FileSha1 = util.FileSha1(newFile)
 		meta.UpdateFileMeta(fileMeta)
+		// 更新用户文件记录
+		r.ParseForm()
+		username := r.Form.Get("username")
+		if ok := meta.UpdateUserFileDB(
+			username,
+			fileMeta.FileSha1, fileMeta.FileName, fileMeta.FileSize,
+		); !ok {
+			io.WriteString(w, "Failed to upload")
+		}
 
-		ok := meta.UpdateFileMetaDB(fileMeta)
-		if !ok {
+		if ok := meta.UpdateFileMetaDB(fileMeta); !ok {
 			log.Println("Failed to save to database")
 		}
 
-		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
+		http.Redirect(w, r, "/home", http.StatusFound)
 	}
 }
 
@@ -152,7 +161,7 @@ func FileMetaUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// FileDeleteHandler 删除文件..
+// FileDeleteHandler 删除文件
 func FileDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	filehash := r.Form.Get("filehash")

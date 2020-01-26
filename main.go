@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"netdisk/handler"
+	_ "netdisk/settings"
 )
 
 func main() {

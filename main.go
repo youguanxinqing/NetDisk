@@ -17,6 +17,7 @@ func main() {
 
 	{ // core
 		http.HandleFunc("/file/upload", handler.HTTPInterceptor(handler.UploadHandler))
+		http.HandleFunc("/file/fast/upload", handler.HTTPInterceptor(handler.TryFastUploadHander))
 		http.HandleFunc("/file/upload/suc", handler.HTTPInterceptor(handler.UploadSucHandler))
 		http.HandleFunc("/file/meta", handler.HTTPInterceptor(handler.GetFileMetaHandler))
 		http.HandleFunc("/file/download", handler.HTTPInterceptor(handler.FileDownloadHandler))

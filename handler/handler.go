@@ -74,6 +74,22 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// TryFastUploadHander 尝试秒传
+func TryFastUploadHander(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	filehash := r.Form.Get("filehash")
+	// filename := r.Form.Get("filename")
+	// filesize := r.Form.Get("filesize")
+	tfile, isExisted := meta.FastUploadMetaDB(filehash)
+	log.Println(tfile)
+	if !isExisted {
+
+	} else {
+
+	}
+}
+
 // UploadSucHandler 上传已完成
 func UploadSucHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "finished upload")

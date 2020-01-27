@@ -95,7 +95,25 @@ func DeleteFileMeta(filehash string) error {
 	return nil
 }
 
-// UpdateFileNameDB ...
-func UpdateFileNameDB() {
+// QueryFastUploadMeta 查询快速查询信息
+func QueryFastUploadMeta(filehash string) (TableFile, bool) {
+	var tfile TableFile
 
+	stmt, err := mydb.DBConn().Prepare(
+		"select `file_sha1`, `file_name`, `file_size` from tbl_file" +
+			"where file_sha1=?",
+	)
+	if err != nil {
+		log.Println("(QueryFastUploadMeta) failed to prepare sql, err: " + err.Error())
+		return tfile, false
+	}
+	defer stmt.Close()
+
+	if rows, err := stmt.Query(filehash); err == nil {
+		rows.Next()
+		rows.Scan(&tfile.FileHash, &tfile.FileName, &tfile.FileSize)
+		return tfile, true
+	}
+
+	return tfile, true
 }

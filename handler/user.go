@@ -117,6 +117,9 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 // IsTokenValid 验证 token 时效性
 func IsTokenValid(username, token string) bool {
+	if len(token) != 40 {
+		return false
+	}
 	// 1579840405   704610000
 	tsToken, _ := strconv.Atoi(token[32:])
 	tsCur := time.Now().UnixNano() / int64(math.Pow10(11))

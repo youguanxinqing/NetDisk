@@ -38,9 +38,10 @@ func OnUserFileUploadFinished(
 		log.Println(err)
 		return false
 	}
+	// 允许没有插入实际内容
 	if num, err := ret.RowsAffected(); err != nil || num <= 0 {
 		log.Println("no insert operator (OnUserFileUploadFinished)")
-		return false
+		return true
 	}
 
 	return true

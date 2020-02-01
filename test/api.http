@@ -11,7 +11,9 @@ Content-Type: "multipart/form-data"
 ### 
 # 查询
 GET http://127.0.0.1:8080/file/meta?
-  &filehash=aa7a1d3347b66f85af35585907f424305b87f3a3
+  &filehash=7e743a62b8a0c73ded4ff4d89eeaca04d214b63b
+  &username=admin123
+  &token=3d08a2fd99afb48e7f1d06e7fcb9078c15805754
 
 ###
 # 下载

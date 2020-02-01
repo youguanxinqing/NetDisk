@@ -43,12 +43,10 @@ func GetFileMeta(fileSha1 string) (FileMeta, bool) {
 // TODO: 修改所有调用该函数的地方
 func GetFileMetaDB(fileSha1 string) (*FileMeta, bool) {
 	fileMeta, err := db.GetFileMeta(fileSha1)
-	if err != nil {
-		log.Println(err.Error())
-		return nil, false
-	} else if (*fileMeta == db.TableFile{}) {
+	if fileMeta == nil {
+		log.Println("(GetFileMetaDB) " + err.Error())
 		// 如果没有查询到内容
-		return nil, true
+		return nil, false
 	}
 
 	return &FileMeta{

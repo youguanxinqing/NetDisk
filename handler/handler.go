@@ -78,16 +78,41 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 func TryFastUploadHander(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
+	// 参数析
+	username := r.Form.Get("username")
 	filehash := r.Form.Get("filehash")
-	// filename := r.Form.Get("filename")
-	// filesize := r.Form.Get("filesize")
-	tfile, isExisted := meta.FastUploadMetaDB(filehash)
-	log.Println(tfile)
-	if !isExisted {
-
-	} else {
-
+	filename := r.Form.Get("filename")
+	filesize, _ := strconv.Atoi(r.Form.Get("filesize"))
+	// 查询相同 hash 记录
+	fileMeta, ok := meta.GetFileMetaDB(filehash)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+	if fileMeta == nil {
+		response := util.RespMsg{
+			Code: -1,
+			Msg:  "秒传失败，请访问普通上传接口",
+		}
+		w.Write(response.JSONBytes())
+		return
+	}
+	// 上传过的文件写入用户文件表中，返回成功
+	ok = meta.UpdateUserFileDB(username, filehash, filename, int64(filesize))
+	if ok {
+		response := util.RespMsg{
+			Code: 0,
+			Msg:  "秒传成功",
+		}
+		w.Write(response.JSONBytes())
+		return
+	}
+
+	response := util.RespMsg{
+		Code: -1,
+		Msg:  "秒传失败，请稍后再试",
+	}
+	w.Write(response.JSONBytes())
 }
 
 // UploadSucHandler 上传已完成

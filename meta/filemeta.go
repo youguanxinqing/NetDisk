@@ -40,14 +40,18 @@ func GetFileMeta(fileSha1 string) (FileMeta, bool) {
 }
 
 // GetFileMetaDB 数据库查询
-func GetFileMetaDB(fileSha1 string) (FileMeta, bool) {
+// TODO: 修改所有调用该函数的地方
+func GetFileMetaDB(fileSha1 string) (*FileMeta, bool) {
 	fileMeta, err := db.GetFileMeta(fileSha1)
 	if err != nil {
 		log.Println(err.Error())
-		return FileMeta{}, false
+		return nil, false
+	} else if (*fileMeta == db.TableFile{}) {
+		// 如果没有查询到内容
+		return nil, true
 	}
 
-	return FileMeta{
+	return &FileMeta{
 		FileSha1: fileMeta.FileHash,
 		FileName: fileMeta.FileName.String,
 		FileSize: fileMeta.FileSize.Int64,

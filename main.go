@@ -12,7 +12,8 @@ func main() {
 	// routes
 	{ // base
 		http.HandleFunc("/static/", handler.StaticResource)
-		http.HandleFunc("/home", handler.HTTPInterceptor(handler.HomeHandler))
+		// FIXME: home 页面不能做 auth, 否则不能登陆成功
+		http.HandleFunc("/home", handler.HomeHandler)
 	}
 
 	{ // core

@@ -19,6 +19,7 @@ type SignUpService struct {
 }
 
 func (srv *SignUpService) Register() ygerr.YgError {
+	// 1. 用户是否存在
 	var user model.UserModel
 	if d := db.First(&user, "id=?", srv.NetDiskNo); d.Error == nil {
 		return ygerr.NewWebCtl(ygerr.ClientError, "用户已存在")
@@ -27,6 +28,7 @@ func (srv *SignUpService) Register() ygerr.YgError {
 		return ygerr.NewWebCtl(ygerr.ServerError, "未知错误")
 	}
 
+	// 2. 创建用户
 	user.Id = srv.NetDiskNo
 	user.Password = srv.Password
 	user.Password = encPassword(srv.Password)

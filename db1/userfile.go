@@ -1,7 +1,7 @@
-package db
+package db1
 
 import (
-	"netdisk/db/mysql"
+	"netdisk/db1/mysql"
 	"time"
 
 	"log"

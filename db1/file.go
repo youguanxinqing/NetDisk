@@ -1,10 +1,10 @@
-package db
+package db1
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
-	mydb "netdisk/db/mysql"
+	mydb "netdisk/db1/mysql"
 	"time"
 )
 

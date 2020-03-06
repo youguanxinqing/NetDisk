@@ -2,16 +2,18 @@ package mysql
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"netdisk/settings"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
 
 func init() {
 	// parseTime=true 开启解析时间
-	db, _ = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/netdisk?charset=utf8&parseTime=true")
+	db, _ = sql.Open(settings.DBType(), settings.DBURI())
 	db.SetMaxOpenConns(1000)
 	err := db.Ping()
 	if err != nil {

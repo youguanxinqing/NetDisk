@@ -1,19 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"netdisk/router"
+	"netdisk/settings"
 
-	_ "netdisk/settings"
+	log "github.com/sirupsen/logrus"
+
+	_ "netdisk/utils/log-conf"
 )
 
 func main() {
 	// listen
-	r := router.DefaultRouter()
+	r := router.New()
 
-	addr := ":8080"
-	fmt.Println("start service base on " + addr)
+	addr := settings.ServerAddr()
+	log.Println("start service base on " + addr)
 	if err := r.Run(addr); err != nil {
 		log.Fatal(err)
 	}

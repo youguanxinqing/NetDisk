@@ -2,7 +2,7 @@ package meta
 
 import (
 	"log"
-	"netdisk/db"
+	"netdisk/db1"
 )
 
 // FileMeta 文件元信息
@@ -27,7 +27,7 @@ func UpdateFileMeta(fileMeta FileMeta) {
 
 // UpdateFileMetaDB ...
 func UpdateFileMetaDB(fileMeta FileMeta) bool {
-	return db.OnFileUploadFinished(fileMeta.FileSha1,
+	return db1.OnFileUploadFinished(fileMeta.FileSha1,
 		fileMeta.FileName, fileMeta.FileSize, fileMeta.Location)
 }
 
@@ -42,7 +42,7 @@ func GetFileMeta(fileSha1 string) (FileMeta, bool) {
 // GetFileMetaDB 数据库查询
 // TODO: 修改所有调用该函数的地方
 func GetFileMetaDB(fileSha1 string) (*FileMeta, bool) {
-	fileMeta, err := db.GetFileMeta(fileSha1)
+	fileMeta, err := db1.GetFileMeta(fileSha1)
 	if fileMeta == nil {
 		log.Println("(GetFileMetaDB) " + err.Error())
 		// 如果没有查询到内容
@@ -72,9 +72,9 @@ func RemoveFileMeta(fileSha1 string) {
 	delete(fileMetas, fileSha1)
 }
 
-// RemoveFileMetaDB 移除文件元信息(from db)
+// RemoveFileMetaDB 移除文件元信息(from db1)
 func RemoveFileMetaDB(fileSha1 string) {
-	err := db.DeleteFileMeta(fileSha1)
+	err := db1.DeleteFileMeta(fileSha1)
 	if err != nil {
 		log.Println("occur error while delete filemeta, err: " + err.Error())
 	}

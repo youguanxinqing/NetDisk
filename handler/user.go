@@ -7,7 +7,7 @@ import (
 	"log"
 	"math"
 	"net/http"
-	"netdisk/db"
+	"netdisk/db1"
 	"netdisk/util"
 	"strconv"
 	"time"
@@ -32,7 +32,7 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(username + ":" + passwd)
 		// encode passwd
 		passwdSha := encPasswd(passwd)
-		if ok := db.UserSignUp(username, passwdSha); ok {
+		if ok := db1.UserSignUp(username, passwdSha); ok {
 			io.WriteString(w, "SUCCESS")
 		} else {
 			io.WriteString(w, "FAILED")
@@ -58,13 +58,13 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		passwd := r.Form.Get("password")
 		passwdSha := encPasswd(passwd)
 		// 1. 账号密码校验
-		if ok := db.UserSignIn(username, passwdSha); !ok {
+		if ok := db1.UserSignIn(username, passwdSha); !ok {
 			io.WriteString(w, "Failed to login")
 			return
 		}
 		// 2. 生成 token
 		token := genToken(username)
-		if ok := db.UpdateToken(username, token); !ok {
+		if ok := db1.UpdateToken(username, token); !ok {
 			io.WriteString(w, "Failed to update token")
 			return
 		}
@@ -98,7 +98,7 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 		// }
 
 		// 3. 查询用户信息
-		userInfo, err := db.GetUserInfo(username)
+		userInfo, err := db1.GetUserInfo(username)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -129,7 +129,7 @@ func IsTokenValid(username, token string) bool {
 		return false
 	}
 	// 验证 token 的正确性
-	if tokenFromDB, err := db.GetToken(username); err != nil || token != tokenFromDB {
+	if tokenFromDB, err := db1.GetToken(username); err != nil || token != tokenFromDB {
 		return false
 	}
 	return true

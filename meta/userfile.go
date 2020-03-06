@@ -2,7 +2,7 @@ package meta
 
 import (
 	"log"
-	"netdisk/db"
+	"netdisk/db1"
 )
 
 // UpdateUserFileDB 更新文件详情
@@ -10,15 +10,15 @@ func UpdateUserFileDB(
 	username, filehash, filename string,
 	filesize int64,
 ) bool {
-	return db.OnUserFileUploadFinished(username, filehash, filename, filesize)
+	return db1.OnUserFileUploadFinished(username, filehash, filename, filesize)
 }
 
 // QueryUserFileDetails 查询文件详情
-func QueryUserFileDetails(username string, limit int) []db.UserFile {
-	if ufiles, err := db.QueryUserFileMetas(username, limit); err == nil {
+func QueryUserFileDetails(username string, limit int) []db1.UserFile {
+	if ufiles, err := db1.QueryUserFileMetas(username, limit); err == nil {
 		return ufiles
 	} else {
 		log.Println(err.Error())
 	}
-	return []db.UserFile{}
+	return []db1.UserFile{}
 }

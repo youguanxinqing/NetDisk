@@ -1,8 +1,8 @@
-package db
+package db1
 
 import (
 	"log"
-	mydb "netdisk/db/mysql"
+	mydb "netdisk/db1/mysql"
 )
 
 // UserSignUp 注册接口

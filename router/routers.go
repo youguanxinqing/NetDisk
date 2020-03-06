@@ -1,28 +1,32 @@
 package router
 
-import "net/http"
+import (
+	"netdisk/controller"
 
-type middlewareFunc func(http.HandlerFunc) http.HandlerFunc
+	"github.com/gin-gonic/gin"
+)
 
-type Router struct {
-	middlewares []middlewareFunc
+var r *gin.Engine
+
+func New() *gin.Engine {
+	// user
+	gUser := r.Group("/user")
+	registerUser(gUser)
+
+	// ...
+
+	// ...
+
+	return r
 }
 
-func NewRouter() *Router {
-	return &Router{}
+func registerUser(g *gin.RouterGroup) {
+	ctl := new(controller.UserController)
+	g.POST("/sigup", ctl.SignUp) // 创建用户
+	g.POST("/sigin")             // 用户登录
+	g.GET("/info")               // 获取用户信息
 }
 
-func (r *Router) Use(mw middlewareFunc) {
-	r.middlewares = append(r.middlewares, mw)
-}
-
-func (r *Router) Add(pattern string, handler http.HandlerFunc) {
-	for i := len(r.middlewares); i >= 0; i-- {
-		handler = (r.middlewares[i])(handler)
-	}
-	http.HandleFunc(pattern, handler)
-}
-
-func (r *Router) Run(addr string) error {
-	return http.ListenAndServe(addr, nil)
+func init() {
+	r = gin.Default()
 }

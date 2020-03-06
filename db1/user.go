@@ -58,7 +58,7 @@ func UserSignIn(username, encpasswd string) bool {
 			return true
 		}
 	}
-	log.Println("password is error")
+	log.Println("password is ygerr")
 	return false
 }
 

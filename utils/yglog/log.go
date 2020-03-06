@@ -1,4 +1,4 @@
-package log_conf
+package yglog
 
 import (
 	"os"

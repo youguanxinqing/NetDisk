@@ -23,6 +23,7 @@ func init() {
 			Port:     3306,
 			UserName: "root",
 			Password: "123456",
+			DBName:   "netdisk",
 		},
 		Server: ServerConf{
 			Host: "0.0.0.0",

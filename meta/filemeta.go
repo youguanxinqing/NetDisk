@@ -76,6 +76,6 @@ func RemoveFileMeta(fileSha1 string) {
 func RemoveFileMetaDB(fileSha1 string) {
 	err := db1.DeleteFileMeta(fileSha1)
 	if err != nil {
-		log.Println("occur error while delete filemeta, err: " + err.Error())
+		log.Println("occur ygerr while delete filemeta, err: " + err.Error())
 	}
 }

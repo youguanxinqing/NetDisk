@@ -22,3 +22,7 @@ func mysqlUri() string {
 		databaseConf.DBName,
 	)
 }
+
+func init() {
+	databaseConf = Default.DataBase
+}

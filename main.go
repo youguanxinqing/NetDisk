@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	_ "netdisk/utils/log-conf"
+	_ "netdisk/utils/yglog"
 )
 
 func main() {

@@ -10,7 +10,7 @@ import (
 
 type UserController struct{}
 
-// @Summary
+// @Summary 用户注册
 // @tags user
 // @Produce json
 // @Param netdisk_no query string true "网盘号"
@@ -42,4 +42,24 @@ type SignUpRsp struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data interface{}
+}
+
+// @Summary 用户登录
+// @tags
+// @Produce json
+// @Param name query string true "姓名"
+// @Success 200 {object} your.struct
+// @Router url(/xxx/xxx) [get]
+func (*UserController) SignIn(c *gin.Context) {
+
+}
+
+// @Summary 获取用户信息
+// @tags
+// @Produce json
+// @Param name query string true "姓名"
+// @Success 200 {object} your.struct
+// @Router url(/xxx/xxx) [get]
+func (*UserController) Info(c *gin.Context) {
+
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"netdisk/service/user"
 	"netdisk/utils/ygerr"
+	"netdisk/utils/ygjwt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -51,7 +52,38 @@ type SignUpRsp struct {
 // @Success 200 {object} your.struct
 // @Router url(/xxx/xxx) [get]
 func (*UserController) SignIn(c *gin.Context) {
+	srv := new(user.SignInService)
+	if err := c.BindJSON(srv); err != nil {
+		c.JSON(http.StatusOK, SignInRsp{http.StatusUnprocessableEntity, "参数异常", nil})
+		return
+	}
 
+	if userinfo, err := srv.Login(); err != nil {
+		switch err.Code() {
+		case ygerr.ClientError:
+			c.JSON(http.StatusOK, SignInRsp{http.StatusBadRequest, err.Error(), nil})
+		case ygerr.ServerError:
+			c.JSON(http.StatusOK, SignInRsp{http.StatusInternalServerError, err.Error(), nil})
+		}
+		return
+	} else {
+		// 发放 token
+		tokenStr, err := ygjwt.ReleseToken(userinfo["netdisk_no"])
+		if err != nil {
+			c.JSON(http.StatusOK, SignInRsp{http.StatusInternalServerError, "生成 token 异常", nil})
+			return
+		}
+		c.Header("Set-Authorization", tokenStr)
+		c.Set("user", userinfo)
+		c.JSON(http.StatusOK, SignInRsp{http.StatusOK, "登录成功", nil})
+		return
+	}
+}
+
+type SignInRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data interface{}
 }
 
 // @Summary 获取用户信息

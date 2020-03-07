@@ -58,7 +58,7 @@ func (*UserController) SignIn(c *gin.Context) {
 		return
 	}
 
-	if userinfo, err := srv.Login(); err != nil {
+	if info, err := srv.Login(); err != nil {
 		switch err.Code() {
 		case ygerr.ClientError:
 			c.JSON(http.StatusOK, SignInRsp{http.StatusBadRequest, err.Error(), nil})
@@ -68,13 +68,12 @@ func (*UserController) SignIn(c *gin.Context) {
 		return
 	} else {
 		// 发放 token
-		tokenStr, err := ygjwt.ReleseToken(userinfo["netdisk_no"])
+		tokenStr, err := ygjwt.ReleseToken(info.NetDiskNo)
 		if err != nil {
 			c.JSON(http.StatusOK, SignInRsp{http.StatusInternalServerError, "生成 token 异常", nil})
 			return
 		}
 		c.Header("Set-Authorization", tokenStr)
-		c.Set("user", userinfo)
 		c.JSON(http.StatusOK, SignInRsp{http.StatusOK, "登录成功", nil})
 		return
 	}
@@ -93,5 +92,25 @@ type SignInRsp struct {
 // @Success 200 {object} your.struct
 // @Router url(/xxx/xxx) [get]
 func (*UserController) Info(c *gin.Context) {
+	srv := new(user.InfoService)
+	srv.SetContext(c)
 
+	info, err := srv.Info()
+	if err != nil {
+		switch err.Code() {
+		case ygerr.ClientError:
+			c.JSON(http.StatusOK, InfoRsp{http.StatusBadRequest, err.Error(), nil})
+		case ygerr.ServerError:
+			c.JSON(http.StatusOK, InfoRsp{http.StatusInternalServerError, err.Error(), nil})
+		}
+		return
+	}
+	c.JSON(http.StatusOK, InfoRsp{http.StatusOK, "", info})
+	return
+}
+
+type InfoRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data *user.Info
 }

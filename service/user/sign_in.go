@@ -13,9 +13,7 @@ type SignInService struct {
 	Password  string `json:"password"`
 }
 
-type UserInfo map[string]string
-
-func (srv *SignInService) Login() (UserInfo, ygerr.YgError) {
+func (srv *SignInService) Login() (*Info, ygerr.YgError) {
 	// 1. 用户是否存在
 	var user model.UserModel
 	if d := db.First(&user, "id=?", srv.NetDiskNo); d.RecordNotFound() {
@@ -41,9 +39,9 @@ func isEqualPassword(hashPassword, password string) bool {
 }
 
 // 影响部分不可公开信息
-func enInfo(user *model.UserModel) UserInfo {
-	return UserInfo{
-		"netdisk_no": user.Id,
-		"nickname":   user.Username,
+func enInfo(user *model.UserModel) *Info {
+	return &Info{
+		NetDiskNo: user.Id,
+		NickName:  user.Username,
 	}
 }

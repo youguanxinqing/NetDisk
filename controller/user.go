@@ -40,9 +40,9 @@ func (*UserController) SignUp(c *gin.Context) {
 }
 
 type SignUpRsp struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data interface{}
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 // @Summary 用户登录
@@ -80,9 +80,9 @@ func (*UserController) SignIn(c *gin.Context) {
 }
 
 type SignInRsp struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data interface{}
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 // @Summary 获取用户信息
@@ -110,7 +110,7 @@ func (*UserController) Info(c *gin.Context) {
 }
 
 type InfoRsp struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data *user.Info
+	Code int        `json:"code"`
+	Msg  string     `json:"msg"`
+	Data *user.Info `json:"data"`
 }

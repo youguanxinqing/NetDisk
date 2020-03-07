@@ -1,8 +1,9 @@
 package ygjwt
 
 import (
-	"log"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -31,17 +32,19 @@ func ReleseToken(indentify string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return "", err
 	}
 	return tokenString, nil
 }
 
+// 解析 token
 func ParseToken(tokenString string) (*jwt.Token, *Claims, error) {
 	claims := new(Claims)
 	if token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	}); err != nil {
+		log.Error(err)
 		return nil, nil, err
 	} else {
 		return token, claims, nil

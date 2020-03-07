@@ -1,26 +1,42 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
-	"netdisk/handler"
-	"netdisk/util"
+	"netdisk/dao"
+	"netdisk/help/huser"
+	"netdisk/model"
+	"netdisk/utils/ygjwt"
+	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleWare(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		username := r.Form.Get("username")
-		token := r.Form.Get("token")
+func AuthMiddleWare(c *gin.Context) {
+	tokenString := c.GetHeader("Authorization")
 
-		if len(username) < 3 || !handler.IsTokenValid(username, token) {
-			response := util.NewRespMsg(
-				http.StatusMovedPermanently, "token is expired", map[string]string{
-					"Location": "/user/signin",
-				})
-			w.Write(response.JSONBytes())
-			return
-		}
-
-		h(w, r)
+	if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
+		c.JSON(http.StatusUnauthorized, gin.H{"msg": "权限不足"})
 	}
+
+	tokenString = tokenString[7:]
+	token, claims, err := ygjwt.ParseToken(tokenString)
+	if err != nil || !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{"msg": "权限不足"})
+		c.Abort()
+		return
+	}
+
+	db := dao.NewDB()
+	var user model.UserModel
+	if db.First(&user, "id=?", claims.UserId).RecordNotFound() {
+		c.JSON(http.StatusUnauthorized, gin.H{"msg": "权限不足"})
+		c.Abort()
+		return
+	}
+
+	c.Set("user", huser.HideUserInfo(&user))
+	tmp, _ := c.Get("user")
+	log.Println(tmp)
+	c.Next()
 }

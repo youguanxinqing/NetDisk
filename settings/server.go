@@ -3,10 +3,10 @@ package settings
 var serverConf ServerConf
 
 type ServerConf struct {
-	Host string
-	Port int32
+	Host string `ini:"host"`
+	Port int32  `ini:"port"`
 }
 
 func init() {
-	serverConf = Default.Server
+	serverConf = _if(Global == nil, Default.Server, Global.Server).(ServerConf)
 }

@@ -3,12 +3,12 @@ package settings
 import "fmt"
 
 type DataBaseConf struct {
-	Type     string // 数据库类型
-	Host     string
-	Port     uint16
-	UserName string
-	Password string
-	DBName   string // 数据库名
+	Type     string `ini:"type"` // 数据库类型
+	Host     string `ini:"host"`
+	Port     uint16 `ini:"port"`
+	UserName string `ini:"userName"`
+	Password string `ini:"password"`
+	DBName   string `ini:"dbname"` // 数据库名
 }
 
 var databaseConf DataBaseConf
@@ -24,5 +24,5 @@ func mysqlUri() string {
 }
 
 func init() {
-	databaseConf = Default.DataBase
+	databaseConf = _if(Global == nil, Default.DataBase, Global.DataBase).(DataBaseConf)
 }

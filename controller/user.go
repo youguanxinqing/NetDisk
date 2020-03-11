@@ -18,7 +18,7 @@ type UserController struct{}
 // @Param password query string true "密码"
 // @Param tel query string true "电话号码"
 // @Success 200 {object} SignUpRsp
-// @Router /user/sigup [get]
+// @Router /user/sigup [post]
 func (*UserController) SignUp(c *gin.Context) {
 	srv := new(user.SignUpService)
 	if err := c.BindJSON(srv); err != nil {
@@ -46,11 +46,12 @@ type SignUpRsp struct {
 }
 
 // @Summary 用户登录
-// @tags
+// @tags user
 // @Produce json
-// @Param name query string true "姓名"
-// @Success 200 {object} your.struct
-// @Router url(/xxx/xxx) [get]
+// @Param netdisk_no query string true "网盘号"
+// @Param password query string true "密码"
+// @Success 200 {object} SignInRsp
+// @Router /user/sigin [post]
 func (*UserController) SignIn(c *gin.Context) {
 	srv := new(user.SignInService)
 	if err := c.BindJSON(srv); err != nil {
@@ -86,11 +87,10 @@ type SignInRsp struct {
 }
 
 // @Summary 获取用户信息
-// @tags
+// @tags user
 // @Produce json
-// @Param name query string true "姓名"
-// @Success 200 {object} your.struct
-// @Router url(/xxx/xxx) [get]
+// @Success 200 {object} InfoRsp
+// @Router /user/info [get]
 func (*UserController) Info(c *gin.Context) {
 	srv := new(user.InfoService)
 	srv.SetContext(c)

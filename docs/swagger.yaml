@@ -1,0 +1,104 @@
+definitions:
+  controller.InfoRsp:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/user.Info'
+        type: object
+      msg:
+        type: string
+    type: object
+  controller.SignInRsp:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  controller.SignUpRsp:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  user.Info:
+    properties:
+      netdisk_no:
+        type: string
+      nickname:
+        type: string
+    type: object
+info:
+  contact: {}
+  license: {}
+paths:
+  /user/info:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.InfoRsp'
+      summary: 获取用户信息
+      tags:
+      - user
+  /user/sigin:
+    post:
+      parameters:
+      - description: 网盘号
+        in: query
+        name: netdisk_no
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SignInRsp'
+      summary: 用户登录
+      tags:
+      - user
+  /user/sigup:
+    post:
+      parameters:
+      - description: 网盘号
+        in: query
+        name: netdisk_no
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      - description: 电话号码
+        in: query
+        name: tel
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.SignUpRsp'
+      summary: 用户注册
+      tags:
+      - user
+swagger: "2.0"

@@ -1,12 +1,21 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "This is a sample Server pets",
+        "title": "Swagger Example API",
         "contact": {},
-        "license": {}
+        "license": {},
+        "version": "0.0.1"
     },
+    "basePath": "/",
     "paths": {
         "/user/info": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -14,15 +23,6 @@
                     "user"
                 ],
                 "summary": "获取用户信息",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "权限验证",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -165,6 +165,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

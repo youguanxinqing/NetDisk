@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   controller.InfoRsp:
     properties:
@@ -36,16 +37,13 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a sample Server pets
   license: {}
+  title: Swagger Example API
+  version: 0.0.1
 paths:
   /user/info:
     get:
-      parameters:
-      - description: 权限验证
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -53,6 +51,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controller.InfoRsp'
+      security:
+      - ApiKeyAuth: []
       summary: 获取用户信息
       tags:
       - user
@@ -107,4 +107,9 @@ paths:
       summary: 用户注册
       tags:
       - user
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

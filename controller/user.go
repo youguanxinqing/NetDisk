@@ -94,7 +94,7 @@ type SignInRsp struct {
 // @Summary 获取用户信息
 // @tags user
 // @Produce json
-// @Param Authorization header string true "权限验证"
+// @Security ApiKeyAuth
 // @Success 200 {object} InfoRsp
 // @Router /user/info [get]
 func (*UserController) Info(c *gin.Context) {

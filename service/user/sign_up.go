@@ -13,9 +13,9 @@ import (
 // 用户注册
 
 type SignUpService struct {
-	NetDiskNo string `json:"netdisk_no"` // 网盘号
-	Password  string `json:"password"`
-	Tel       string `json:"tel"`
+	NetDiskNo string `form:"netdisk_no"` // 网盘号
+	Password  string `form:"password"`
+	Tel       string `form:"tel"`
 }
 
 func (srv *SignUpService) Register() ygerr.YgError {

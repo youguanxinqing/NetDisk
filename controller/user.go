@@ -6,6 +6,8 @@ import (
 	"netdisk/utils/ygerr"
 	"netdisk/utils/ygjwt"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +23,8 @@ type UserController struct{}
 // @Router /user/sigup [post]
 func (*UserController) SignUp(c *gin.Context) {
 	srv := new(user.SignUpService)
-	if err := c.BindJSON(srv); err != nil {
+	if err := c.ShouldBind(srv); err != nil {
+		log.Error(err)
 		c.JSON(http.StatusOK, SignUpRsp{http.StatusUnprocessableEntity, "参数异常", nil})
 		return
 	}
@@ -50,11 +53,13 @@ type SignUpRsp struct {
 // @Produce json
 // @Param netdisk_no query string true "网盘号"
 // @Param password query string true "密码"
+// @Header 200 {string} string "Set-Authorization"
 // @Success 200 {object} SignInRsp
 // @Router /user/sigin [post]
 func (*UserController) SignIn(c *gin.Context) {
 	srv := new(user.SignInService)
-	if err := c.BindJSON(srv); err != nil {
+	if err := c.ShouldBind(srv); err != nil {
+		log.Info(err)
 		c.JSON(http.StatusOK, SignInRsp{http.StatusUnprocessableEntity, "参数异常", nil})
 		return
 	}
@@ -89,6 +94,7 @@ type SignInRsp struct {
 // @Summary 获取用户信息
 // @tags user
 // @Produce json
+// @Param Authorization header string true "权限验证"
 // @Success 200 {object} InfoRsp
 // @Router /user/info [get]
 func (*UserController) Info(c *gin.Context) {

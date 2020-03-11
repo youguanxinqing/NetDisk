@@ -9,8 +9,8 @@ import (
 )
 
 type SignInService struct {
-	NetDiskNo string `json:"netdisk_no"`
-	Password  string `json:"password"`
+	NetDiskNo string `form:"netdisk_no"`
+	Password  string `form:"password"`
 }
 
 func (srv *SignInService) Login() (*Info, ygerr.YgError) {

@@ -40,6 +40,12 @@ info:
 paths:
   /user/info:
     get:
+      parameters:
+      - description: 权限验证
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:

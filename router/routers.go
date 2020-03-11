@@ -16,8 +16,8 @@ func New() *gin.Engine {
 
 	// ...
 
-	// ...
-
+	// swagger
+	registerSwagger()
 	return r
 }
 
